@@ -1,4 +1,4 @@
-export type UserRole = 'citizen' | 'green_champion' | 'ward_officer' | 'admin';
+export type UserRole = 'citizen' | 'officer' | 'admin' | 'green_champion' | 'ward_officer';
 
 export type WasteCategory =
   | 'wet_organic'
@@ -10,18 +10,32 @@ export type WasteCategory =
 
 export type ReportSeverity = 'low' | 'medium' | 'high' | 'critical';
 
+export type ReportStatus =
+  | 'pending_assignment'
+  | 'assigned'
+  | 'in_progress'
+  | 'pending_admin_approval'
+  | 'resolved'
+  | 'rejected'
+  | 'pending'
+  | 'reviewed'; // backward compat
+
 export type Language = 'en' | 'hi';
 
 export interface User {
   id: string;
   name: string;
   email: string;
-  password: string;
+  password?: string;
   role: UserRole;
+  aadharNumber?: string; // Formatted e.g. "5432-9876-1234"
+  employerId?: string; // Formatted e.g. "EMP-KA33-902"
   trainingCompleted: boolean;
   trainingScore: number;
   reportsCount: number;
-  civicPoints?: number;
+  civicPoints?: number; // For Citizen
+  officerEarnings?: number; // In ₹ for Officer
+  officerBountiesCount?: number;
   badge: 'none' | 'reporter' | 'champion' | 'hero';
   createdAt: string;
 }
@@ -33,6 +47,8 @@ export interface Report {
   photoDataUrl: string;
   audioDataUrl?: string; // Voice note landmark recording
   resolvedPhotoDataUrl?: string; // "After Cleanup" evidence
+  officerProofPhoto?: string; // Officer uploaded cleanup photo
+  officerNotes?: string;
   lat: number;
   lng: number;
   address?: string; // Live geocoded street address
@@ -40,11 +56,19 @@ export interface Report {
   description: string;
   wasteCategory: WasteCategory;
   severity: ReportSeverity;
-  status: 'pending' | 'reviewed' | 'resolved';
+  status: ReportStatus;
+  distanceKm?: number; // Calculated dynamic distance for officer radar
   assignedTipper?: string; // e.g. "Tipper-KA33-104"
+  assignedOfficerId?: string;
+  assignedOfficerName?: string;
+  assignedOfficerEmployerId?: string;
   etaMinutes?: number;
   adminNotes?: string;
+  citizenRewardAwarded?: number; // e.g. 50 Civic Points
+  officerBountyAwarded?: number; // e.g. ₹250 Cash Bounty
   createdAt: string;
+  assignedAt?: string;
+  completedAt?: string;
   updatedAt?: string;
 }
 
@@ -73,8 +97,10 @@ export interface TrainingQuestion {
 export interface RewardVoucher {
   id: string;
   title: string;
-  category: 'tax_rebate' | 'compost' | 'metro_pass' | 'bin_kit';
-  pointsCost: number;
+  targetRole: 'citizen' | 'officer' | 'all';
+  category: 'tax_rebate' | 'compost' | 'metro_pass' | 'bin_kit' | 'cash_payout' | 'uniform_kit' | 'fuel_allowance' | 'health_insurance';
+  costValue: number; // Civic points for Citizen, or ₹ bounty for Officer
+  costType: 'points' | 'rupees';
   description: string;
   discountValue: string;
   code: string;
@@ -127,4 +153,3 @@ export interface TipperVehicle {
   batteryPercent?: number;
   capacityKg?: number;
 }
-

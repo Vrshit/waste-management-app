@@ -12,7 +12,9 @@ import {
   Menu,
   X,
   Leaf,
-  Globe,
+  Truck,
+  Wallet,
+  Sparkles,
 } from 'lucide-react';
 import { useLanguage } from '@/lib/translations';
 
@@ -62,14 +64,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const isAdmin = user.role === 'admin' || user.role === 'ward_officer';
+  const isOfficer = user.role === 'officer';
+  const isAdmin = user.role === 'admin';
 
-  const navItems = [
-    { href: '/dashboard', label: t.navDashboard, icon: LayoutDashboard },
+  let navItems = [
     { href: '/report', label: t.navReport, icon: Camera },
+    { href: '/dashboard', label: t.navDashboard, icon: LayoutDashboard },
     { href: '/facilities', label: t.navFacilities, icon: MapPin },
-    ...(isAdmin ? [{ href: '/admin', label: t.navAdmin, icon: Shield }] : []),
   ];
+
+  if (isOfficer) {
+    navItems = [
+      { href: '/officer', label: t.navOfficerRadar, icon: Truck },
+      { href: '/facilities', label: t.navFacilities, icon: MapPin },
+    ];
+  } else if (isAdmin) {
+    navItems = [
+      { href: '/admin', label: t.navAdmin, icon: Shield },
+      { href: '/facilities', label: t.navFacilities, icon: MapPin },
+    ];
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#faf8f4] text-[#192f1d] relative font-sans">
@@ -95,7 +109,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="sticky top-4 z-50 px-4 flex justify-center w-full">
         <header className="glass-pill rounded-full px-4 py-2.5 max-w-6xl w-full flex items-center justify-between shadow-[0_10px_30px_rgba(22,101,52,0.08)] border border-white/80">
           {/* Logo & 3D Leaf Badge */}
-          <Link href="/dashboard" className="flex items-center gap-2 group">
+          <Link
+            href={isAdmin ? '/admin' : isOfficer ? '/officer' : '/report'}
+            className="flex items-center gap-2 group"
+          >
             <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-200">
               <Leaf size={20} className="drop-shadow-sm rotate-[-12deg]" />
             </div>
@@ -108,6 +125,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <nav className="hidden md:flex items-center gap-1 bg-black/[0.03] p-1 rounded-full border border-black/[0.04]">
             {navItems.map((item) => {
               const active = router.pathname === item.href;
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
@@ -118,168 +136,124 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       : 'text-gray-700 hover:text-emerald-800 hover:bg-white/90'
                   }`}
                 >
-                  <item.icon size={14} /> {item.label}
+                  <Icon size={14} />
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
           </nav>
 
-          {/* User Profile Pill & Bilingual Language Selector (EN / हिन्दी) */}
-          <div className="hidden md:flex items-center gap-2.5">
-            {/* Quick Language Toggle: English / Hindi */}
-            <div className="flex items-center bg-white/90 border border-gray-200/90 rounded-full p-0.5 text-[11px] font-black text-gray-700 shadow-inner">
+          {/* Right Actions: Points / Earnings Pill, Language & User */}
+          <div className="flex items-center gap-2.5">
+            {/* Role Metric Badge */}
+            {isOfficer ? (
+              <div className="hidden sm:flex items-center gap-1.5 bg-amber-100/90 text-amber-900 border border-amber-300 px-3 py-1 rounded-full text-xs font-black shadow-xs">
+                <Wallet size={13} className="text-amber-700" />
+                <span>₹{user.officerEarnings || 1250}</span>
+              </div>
+            ) : isAdmin ? (
+              <div className="hidden sm:flex items-center gap-1.5 bg-purple-100/90 text-purple-900 border border-purple-300 px-3 py-1 rounded-full text-xs font-black shadow-xs">
+                <Shield size={13} className="text-purple-700" />
+                <span>Admin Authority</span>
+              </div>
+            ) : (
+              <div className="hidden sm:flex items-center gap-1.5 bg-emerald-100/90 text-emerald-900 border border-emerald-300 px-3 py-1 rounded-full text-xs font-black shadow-xs">
+                <Sparkles size={13} className="text-emerald-700" />
+                <span>{user.civicPoints || 50} pts</span>
+              </div>
+            )}
+
+            {/* Language Switcher */}
+            <div className="flex items-center bg-black/[0.04] rounded-full p-0.5 text-xs font-black">
               <button
                 type="button"
                 onClick={() => setLang('en')}
-                className={`px-2.5 py-1 rounded-full transition-all duration-150 ${
-                  lang === 'en'
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-gray-600 hover:text-emerald-800'
+                className={`px-2 py-0.5 rounded-full transition-all ${
+                  lang === 'en' ? 'bg-white text-emerald-950 shadow-xs' : 'text-gray-500 hover:text-gray-900'
                 }`}
-                title="English"
               >
                 EN
               </button>
               <button
                 type="button"
                 onClick={() => setLang('hi')}
-                className={`px-2.5 py-1 rounded-full transition-all duration-150 ${
-                  lang === 'hi'
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-gray-600 hover:text-emerald-800'
+                className={`px-2 py-0.5 rounded-full transition-all ${
+                  lang === 'hi' ? 'bg-white text-emerald-950 shadow-xs' : 'text-gray-500 hover:text-gray-900'
                 }`}
-                title="हिन्दी (Hindi)"
               >
                 हिन्दी
               </button>
             </div>
 
-            <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-3 py-1.5 rounded-full">
-              <span className="text-sm">{BADGE_EMOJI[user.badge] || '🌱'}</span>
-              <span className="text-xs font-bold text-gray-800 max-w-[120px] truncate">
-                {user.name}
+            {/* User Profile / Logout */}
+            <div className="hidden sm:flex items-center gap-2 pl-1">
+              <span className="text-xs font-black text-gray-800 max-w-[120px] truncate">
+                {user.name.split(' ')[0]}
               </span>
-              <span className="text-[9px] font-extrabold tracking-wider bg-emerald-200/80 text-emerald-900 px-2 py-0.5 rounded-full uppercase">
-                {user.role.replace('_', ' ')}
-              </span>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-red-50 text-gray-500 hover:text-red-600 flex items-center justify-center transition shadow-xs"
+                title={t.navLogout}
+              >
+                <LogOut size={14} />
+              </button>
             </div>
 
-            <button
-              onClick={handleLogout}
-              title={t.navLogout}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold text-gray-600 hover:text-red-700 hover:bg-red-50 transition-all"
-            >
-              <LogOut size={13} />
-            </button>
-          </div>
-
-          {/* Mobile hamburger */}
-          <div className="md:hidden flex items-center gap-2">
+            {/* Mobile Menu Button */}
             <button
               type="button"
-              onClick={() => setLang(lang === 'en' ? 'hi' : 'en')}
-              className="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-900 text-xs font-bold flex items-center gap-1"
-            >
-              <Globe size={13} />
-              <span>{lang === 'en' ? 'हिन्दी' : 'EN'}</span>
-            </button>
-            <button
-              className="w-9 h-9 rounded-xl bg-white/80 border border-gray-200 flex items-center justify-center text-gray-700 hover:text-emerald-700"
               onClick={() => setMenuOpen(!menuOpen)}
-              aria-expanded={menuOpen}
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className="md:hidden w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-gray-700"
+              aria-label="Toggle navigation menu"
             >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </header>
 
-        {/* Mobile dropdown */}
+        {/* Mobile Dropdown Menu */}
         {menuOpen && (
-          <>
-            <div
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
-              onClick={() => setMenuOpen(false)}
-            />
-            <div className="fixed top-20 left-4 right-4 z-50 md:hidden bg-white/95 backdrop-blur-xl border border-white rounded-3xl p-5 shadow-2xl space-y-3">
-              {/* User info card */}
-              <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-2xl border border-emerald-200">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-xl">{BADGE_EMOJI[user.badge] || '🌱'}</span>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">{user.name}</p>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800">
-                      {user.role.replace('_', ' ')}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Mobile Language Switcher */}
-                <div className="flex items-center bg-white border border-gray-200 rounded-full p-0.5 text-xs font-bold">
-                  <button
-                    onClick={() => setLang('en')}
-                    className={`px-2.5 py-1 rounded-full ${lang === 'en' ? 'bg-emerald-600 text-white' : 'text-gray-600'}`}
-                  >
-                    EN
-                  </button>
-                  <button
-                    onClick={() => setLang('hi')}
-                    className={`px-2.5 py-1 rounded-full ${lang === 'hi' ? 'bg-emerald-600 text-white' : 'text-gray-600'}`}
-                  >
-                    हिन्दी
-                  </button>
-                </div>
-              </div>
-
-              {/* Links */}
-              <nav className="space-y-1">
-                {navItems.map((item) => {
-                  const active = router.pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
-                      className={`flex items-center gap-2.5 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${
-                        active
-                          ? 'bg-emerald-600 text-white shadow-md'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      <item.icon size={18} /> {item.label}
-                    </Link>
-                  );
-                })}
-              </nav>
-
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-2xl transition border border-red-100"
-              >
-                <LogOut size={16} /> {t.navLogout}
-              </button>
-            </div>
-          </>
+          <div className="absolute top-16 left-4 right-4 bg-white/95 backdrop-blur-xl rounded-3xl p-4 shadow-2xl border border-gray-200 z-50 flex flex-col gap-2 md:hidden">
+            {navItems.map((item) => {
+              const active = router.pathname === item.href;
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold ${
+                    active
+                      ? 'bg-emerald-600 text-white'
+                      : 'text-gray-800 hover:bg-gray-100'
+                  }`}
+                >
+                  <Icon size={18} />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-red-600 hover:bg-red-50"
+            >
+              <LogOut size={18} />
+              <span>{t.navLogout}</span>
+            </button>
+          </div>
         )}
       </div>
 
-      {/* ── Main Content Container ── */}
-      <main id="main-content" className="flex-1 w-full max-w-7xl mx-auto px-4 py-8">
+      {/* ── Main Content Area ── */}
+      <main id="main-content" className="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
         {children}
       </main>
 
-      {/* ── 3D Themed Footer ── */}
-      <footer className="border-t border-gray-200/80 py-8 px-4 text-center bg-white/40 backdrop-blur-md mt-16 text-xs text-gray-500">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-[10px] font-black">
-              S
-            </div>
-            <span className="font-bold text-gray-800">{t.brandName} • {t.tagline}</span>
-            <span>• {t.sihBadge}</span>
-          </div>
-          <p>© 2026 {t.brandName}. All rights reserved.</p>
-        </div>
+      {/* ── Minimal Footer ── */}
+      <footer className="border-t border-black/[0.06] py-6 px-4 text-center text-xs text-gray-500">
+        <p>© 2026 SwachhApp. Clean Green Future Mission • Smart India Hackathon 2026</p>
       </footer>
     </div>
   );

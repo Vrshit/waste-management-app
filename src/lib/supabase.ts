@@ -110,6 +110,8 @@ export async function fetchReportsFromSupabase(): Promise<Report[] | null> {
       photoDataUrl: r.photo_url || '',
       audioDataUrl: r.audio_url || undefined,
       resolvedPhotoDataUrl: r.resolved_photo_url || undefined,
+      officerProofPhoto: r.officer_proof_photo || undefined,
+      officerNotes: r.officer_notes || undefined,
       lat: r.lat,
       lng: r.lng,
       address: r.address || undefined,
@@ -119,9 +121,16 @@ export async function fetchReportsFromSupabase(): Promise<Report[] | null> {
       severity: r.severity,
       status: r.status,
       assignedTipper: r.assigned_tipper || undefined,
+      assignedOfficerId: r.assigned_officer_id || undefined,
+      assignedOfficerName: r.assigned_officer_name || undefined,
+      assignedOfficerEmployerId: r.assigned_officer_employer_id || undefined,
       etaMinutes: r.eta_minutes || undefined,
       adminNotes: r.admin_notes || undefined,
+      citizenRewardAwarded: r.citizen_reward_awarded || undefined,
+      officerBountyAwarded: r.officer_bounty_awarded || undefined,
       createdAt: r.created_at,
+      assignedAt: r.assigned_at || undefined,
+      completedAt: r.completed_at || undefined,
       updatedAt: r.updated_at || undefined,
     }));
   } catch (e) {
@@ -143,6 +152,8 @@ export async function insertReportToSupabase(report: Report): Promise<boolean> {
         photo_url: report.photoDataUrl,
         audio_url: report.audioDataUrl || null,
         resolved_photo_url: report.resolvedPhotoDataUrl || null,
+        officer_proof_photo: report.officerProofPhoto || null,
+        officer_notes: report.officerNotes || null,
         lat: report.lat,
         lng: report.lng,
         address: report.address || null,
@@ -152,8 +163,13 @@ export async function insertReportToSupabase(report: Report): Promise<boolean> {
         severity: report.severity,
         status: report.status,
         assigned_tipper: report.assignedTipper || null,
+        assigned_officer_id: report.assignedOfficerId || null,
+        assigned_officer_name: report.assignedOfficerName || null,
+        assigned_officer_employer_id: report.assignedOfficerEmployerId || null,
         eta_minutes: report.etaMinutes || null,
         admin_notes: report.adminNotes || null,
+        citizen_reward_awarded: report.citizenRewardAwarded || null,
+        officer_bounty_awarded: report.officerBountyAwarded || null,
         created_at: report.createdAt,
       },
     ]);
@@ -180,7 +196,10 @@ export async function updateReportInSupabase(
       updated_at: new Date().toISOString(),
     };
     if (adminNotes !== undefined) payload.admin_notes = adminNotes;
-    if (resolvedPhotoUrl !== undefined) payload.resolved_photo_url = resolvedPhotoUrl;
+    if (resolvedPhotoUrl !== undefined) {
+      payload.resolved_photo_url = resolvedPhotoUrl;
+      payload.officer_proof_photo = resolvedPhotoUrl;
+    }
 
     const { error } = await supabase.from('reports').update(payload).eq('id', id);
     return !error;

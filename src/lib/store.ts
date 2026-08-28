@@ -20,7 +20,7 @@ import {
 
 // ──── Seed Facilities ────
 
-const SEED_FACILITIES: Facility[] = [
+export const SEED_FACILITIES: Facility[] = [
   {
     id: '1',
     name: 'Hyderabad Biomethanisation Plant',
@@ -87,31 +87,9 @@ const SEED_FACILITIES: Facility[] = [
     operatingHours: '8:00 AM – 5:00 PM',
     capacityUtilization: 70,
   },
-  {
-    id: '7',
-    name: 'Kolkata Waste-to-Energy Plant',
-    type: 'waste-to-energy',
-    lat: 22.5726,
-    lng: 88.3639,
-    address: 'Salt Lake, Kolkata',
-    contact: '+91-33-7777-8888',
-    operatingHours: '24/7',
-    capacityUtilization: 91,
-  },
-  {
-    id: '8',
-    name: 'Jaipur Recycling Centre',
-    type: 'recycling',
-    lat: 26.9124,
-    lng: 75.7873,
-    address: 'Mansarovar, Jaipur',
-    contact: '+91-141-9999-1111',
-    operatingHours: '9:00 AM – 5:30 PM',
-    capacityUtilization: 45,
-  },
 ];
 
-// ──── AI Waste Segregation Database (30+ Common Items) ────
+// ──── AI Waste Segregation Database ────
 
 export const WASTE_GUIDE_DATABASE: WasteItemGuide[] = [
   {
@@ -191,31 +169,21 @@ export const WASTE_GUIDE_DATABASE: WasteItemGuide[] = [
     binColor: 'blue',
     binName: 'Blue Bin (Dry Waste)',
     decompositionTime: '500+ years',
-    disposalTip: 'Never burn thermocol (releases carcinogenic dioxins). Store in dry bin for specialized compaction.',
+    disposalTip: 'Never burn thermocol. Store in dry bin for specialized compaction.',
     icon: '📦',
   },
   {
     id: '9',
-    name: 'Broken Glass Bottles',
-    category: 'dry_recyclable',
-    binColor: 'blue',
-    binName: 'Blue Bin (Dry Glass)',
-    decompositionTime: '1 million years',
-    disposalTip: 'Wrap in thick newspaper and label "Sharp Glass" to protect sanitation workers during manual sorting.',
-    icon: '🍾',
-  },
-  {
-    id: '10',
     name: 'Plastic Water Bottles (PET)',
     category: 'dry_recyclable',
     binColor: 'blue',
     binName: 'Blue Bin (Dry Recyclable)',
     decompositionTime: '450 years',
-    disposalTip: 'Crush the bottle and recap before disposing in dry bin to prevent unauthorized reuse.',
+    disposalTip: 'Crush the bottle and recap before disposing in dry bin.',
     icon: '🧴',
   },
   {
-    id: '11',
+    id: '10',
     name: 'Diapers & Sanitary Napkins',
     category: 'hazardous',
     binColor: 'red',
@@ -223,16 +191,6 @@ export const WASTE_GUIDE_DATABASE: WasteItemGuide[] = [
     decompositionTime: '500+ years',
     disposalTip: 'Wrap securely in newspaper marked with red dot (●) as mandated under MSW Rules 2016.',
     icon: '🩹',
-  },
-  {
-    id: '12',
-    name: 'Construction Debris & Bricks',
-    category: 'construction',
-    binColor: 'black',
-    binName: 'C&D Debris Pickup',
-    decompositionTime: 'Indefinite',
-    disposalTip: 'Book specialized municipal tipper on SwachhApp. Never dump near open drains or public roadsides.',
-    icon: '🧱',
   },
 ];
 
@@ -249,14 +207,16 @@ export function lookupWasteItem(query: string): WasteItemGuide | null {
   );
 }
 
-// ──── Rewards Voucher Catalog ────
+// ──── Rewards Catalogs (Role-Specific) ────
 
-export const SEED_REWARDS: RewardVoucher[] = [
+export const SEED_CITIZEN_REWARDS: RewardVoucher[] = [
   {
-    id: 'rew_1',
-    title: '5% Property Tax Rebate Token',
+    id: 'rew_cit_1',
+    title: '5% Municipal Property Tax Rebate',
+    targetRole: 'citizen',
     category: 'tax_rebate',
-    pointsCost: 150,
+    costValue: 150,
+    costType: 'points',
     description: 'Direct deduction voucher valid for annual urban municipal property tax filing.',
     discountValue: '5% OFF (Max ₹500)',
     code: 'SWACHH-TAX-5OFF',
@@ -264,10 +224,12 @@ export const SEED_REWARDS: RewardVoucher[] = [
     icon: '🏛️',
   },
   {
-    id: 'rew_2',
+    id: 'rew_cit_2',
     title: '5kg Bio-Compost Organic Bag',
+    targetRole: 'citizen',
     category: 'compost',
-    pointsCost: 80,
+    costValue: 80,
+    costType: 'points',
     description: 'Free collection token for nutrient-rich organic compost from municipal biomethanisation plants.',
     discountValue: '100% Free (1 Bag)',
     code: 'SWACHH-COMPOST-FREE',
@@ -275,10 +237,12 @@ export const SEED_REWARDS: RewardVoucher[] = [
     icon: '🪴',
   },
   {
-    id: 'rew_3',
+    id: 'rew_cit_3',
     title: 'City Metro / Green Bus Pass',
+    targetRole: 'citizen',
     category: 'metro_pass',
-    pointsCost: 120,
+    costValue: 120,
+    costType: 'points',
     description: 'Discount coupon for urban electric public transit and metro smart card recharge.',
     discountValue: '₹100 Transit Credit',
     code: 'SWACHH-METRO-100',
@@ -286,10 +250,12 @@ export const SEED_REWARDS: RewardVoucher[] = [
     icon: '🚌',
   },
   {
-    id: 'rew_4',
+    id: 'rew_cit_4',
     title: 'Dual-Bin Home Segregation Kit',
+    targetRole: 'citizen',
     category: 'bin_kit',
-    pointsCost: 200,
+    costValue: 200,
+    costType: 'points',
     description: 'Color-coded Green & Blue household pedal bin set delivered by ward committee.',
     discountValue: 'Free Dual-Bin Kit',
     code: 'SWACHH-DUALBIN-2026',
@@ -298,7 +264,62 @@ export const SEED_REWARDS: RewardVoucher[] = [
   },
 ];
 
-// ──── Municipal Ward Leaderboard ────
+export const SEED_OFFICER_REWARDS: RewardVoucher[] = [
+  {
+    id: 'rew_off_1',
+    title: 'Direct Bank Cash Payout Voucher',
+    targetRole: 'officer',
+    category: 'cash_payout',
+    costValue: 500,
+    costType: 'rupees',
+    description: 'Instant direct bank account credit payout for verified dump remediation bounties.',
+    discountValue: '₹500 Direct Bank Transfer',
+    code: 'OFFICER-CASH-500',
+    expiresAt: '31 Dec 2026',
+    icon: '💵',
+  },
+  {
+    id: 'rew_off_2',
+    title: 'Heavy-Duty PPE Safety Boots & Kit',
+    targetRole: 'officer',
+    category: 'uniform_kit',
+    costValue: 400,
+    costType: 'rupees',
+    description: 'Steel-toe puncture-proof waterproof boots, puncture-resistant gloves, and high-vis safety jacket.',
+    discountValue: 'Free PPE Equipment Kit',
+    code: 'OFFICER-PPE-2026',
+    expiresAt: '31 Dec 2026',
+    icon: '🦺',
+  },
+  {
+    id: 'rew_off_3',
+    title: 'Monthly EV/Fuel Energy Allowance',
+    targetRole: 'officer',
+    category: 'fuel_allowance',
+    costValue: 300,
+    costType: 'rupees',
+    description: 'Digital fuel token valid at Indian Oil / HPCL municipal partner stations for tipper vehicles.',
+    discountValue: '₹300 Fuel Allowance',
+    code: 'OFFICER-FUEL-300',
+    expiresAt: '31 Dec 2026',
+    icon: '⛽',
+  },
+  {
+    id: 'rew_off_4',
+    title: 'Ayushman Supplementary Health Coverage',
+    targetRole: 'officer',
+    category: 'health_insurance',
+    costValue: 800,
+    costType: 'rupees',
+    description: 'Quarterly family health checkup and sanitation worker insurance premium waiver.',
+    discountValue: '100% Health Premium Waiver',
+    code: 'OFFICER-HEALTH-CARE',
+    expiresAt: '31 Dec 2026',
+    icon: '🩺',
+  },
+];
+
+// ──── Leaderboard & Scrap Rates ────
 
 export const SEED_WARD_RANKINGS: WardRanking[] = [
   {
@@ -334,31 +355,7 @@ export const SEED_WARD_RANKINGS: WardRanking[] = [
     activeChampions: 96,
     rank: 3,
   },
-  {
-    id: 'w4',
-    wardNumber: 3,
-    name: 'Whitefield Tech Ward',
-    zone: 'East Zone',
-    cleanlinessIndex: 4.5,
-    cleanupRate: 89,
-    avgResponseHours: 3.8,
-    activeChampions: 84,
-    rank: 4,
-  },
-  {
-    id: 'w5',
-    wardNumber: 19,
-    name: 'Jayanagar Heritage Ward',
-    zone: 'South Zone',
-    cleanlinessIndex: 4.4,
-    cleanupRate: 87,
-    avgResponseHours: 4.2,
-    activeChampions: 72,
-    rank: 5,
-  },
 ];
-
-// ──── Daily Scrap Buyback Rates ────
 
 export const SEED_SCRAP_RATES: ScrapRate[] = [
   { id: 'sc_1', material: 'PET Plastic Bottles', pricePerKg: 18, trend: 'up', icon: '🧴' },
@@ -366,10 +363,7 @@ export const SEED_SCRAP_RATES: ScrapRate[] = [
   { id: 'sc_3', material: 'Aluminum Cans & Foil', pricePerKg: 110, trend: 'up', icon: '🥫' },
   { id: 'sc_4', material: 'Old Newspapers (ONP)', pricePerKg: 14, trend: 'stable', icon: '📰' },
   { id: 'sc_5', material: 'E-Waste (Circuit Boards)', pricePerKg: 85, trend: 'up', icon: '🔌' },
-  { id: 'sc_6', material: 'Brass / Copper Scrap', pricePerKg: 420, trend: 'down', icon: '🪙' },
 ];
-
-// ──── Live Tipper Vehicles Simulation ────
 
 export const SEED_TIPPERS: TipperVehicle[] = [
   {
@@ -392,19 +386,7 @@ export const SEED_TIPPERS: TipperVehicle[] = [
     assignedWard: 'Ward 07',
     batteryLevel: 67,
   },
-  {
-    id: 'tip_3',
-    vehicleNumber: 'TS-09-EV-8832',
-    driverName: 'Mohammad Ali',
-    currentLat: 17.386,
-    currentLng: 78.487,
-    status: 'unloading',
-    assignedWard: 'Ward 22',
-    batteryLevel: 94,
-  },
 ];
-
-// ──── Training Questions ────
 
 export const TRAINING_QUESTIONS: TrainingQuestion[] = [
   {
@@ -412,45 +394,21 @@ export const TRAINING_QUESTIONS: TrainingQuestion[] = [
     question: 'Which bin should you use for vegetable peels and food scraps?',
     options: ['Dry Waste (Blue)', 'Wet Waste (Green)', 'Hazardous Waste (Red)', 'Any bin'],
     correctAnswer: 1,
-    explanation:
-      'Vegetable peels and food scraps are biodegradable organic waste. They go into the Green (Wet Waste) bin for composting.',
+    explanation: 'Vegetable peels and food scraps are biodegradable organic waste going into Green (Wet) bin.',
   },
   {
     id: 2,
     question: 'Which of the following is classified as domestic hazardous waste?',
     options: ['Newspaper', 'Banana peel', 'Used batteries', 'Cardboard box'],
     correctAnswer: 2,
-    explanation:
-      'Used batteries contain toxic heavy metals (lead, cadmium, mercury) and must be disposed in the Red (Hazardous) bin, never mixed with regular waste.',
+    explanation: 'Used batteries contain toxic heavy metals and must be disposed in the Red Hazardous bin.',
   },
   {
     id: 3,
     question: 'What is source segregation?',
-    options: [
-      'Collecting waste from multiple sources',
-      'Separating waste at the point of generation into categories',
-      'Dumping waste in landfills',
-      'Burning waste in open areas',
-    ],
+    options: ['Collecting waste together', 'Separating waste at point of generation', 'Dumping in landfills', 'Open burning'],
     correctAnswer: 1,
-    explanation:
-      'Source segregation means separating waste into dry, wet, and hazardous categories right where it is generated (home, office, shop) before collection.',
-  },
-  {
-    id: 4,
-    question: 'Which of these can be composted at home?',
-    options: ['Plastic bottles', 'Glass jars', 'Tea leaves and fruit peels', 'Styrofoam'],
-    correctAnswer: 2,
-    explanation:
-      'Tea leaves and fruit peels are organic matter that decomposes naturally. A simple home compost pit or bin can convert them into nutrient-rich manure in 45-60 days.',
-  },
-  {
-    id: 5,
-    question: "What percentage of India's waste is scientifically treated (2021-22)?",
-    options: ['About 25%', 'About 54%', 'About 75%', 'About 90%'],
-    correctAnswer: 1,
-    explanation:
-      'According to the CPCB MSW Annual Report 2021-22, only about 54% (91,511 TPD out of 1,70,339 TPD) of India\'s municipal solid waste is scientifically treated or processed.',
+    explanation: 'Source segregation means separating waste into dry, wet, and hazardous categories where generated.',
   },
 ];
 
@@ -461,7 +419,6 @@ const REPORTS_KEY = 'wm_reports';
 const FACILITIES_KEY = 'wm_facilities';
 const CURRENT_USER_KEY = 'wm_current_user';
 const REDEEMED_REWARDS_KEY = 'wm_redeemed_rewards';
-const LANG_KEY = 'wm_lang';
 
 function getItem<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback;
@@ -481,13 +438,10 @@ function setItem<T>(key: string, value: T): void {
     if (e?.name === 'QuotaExceededError') {
       const reports = getItem<Report[]>(REPORTS_KEY, []);
       if (reports.length > 5) {
-        const trimmed = reports.slice(reports.length - 5);
-        localStorage.setItem(REPORTS_KEY, JSON.stringify(trimmed));
+        localStorage.setItem(REPORTS_KEY, JSON.stringify(reports.slice(reports.length - 5)));
         try {
           localStorage.setItem(key, JSON.stringify(value));
-        } catch {
-          console.error('Still unable to save to localStorage after cleanup.');
-        }
+        } catch {}
       }
     }
   }
@@ -532,46 +486,10 @@ export function getDistanceKm(lat1: number, lng1: number, lat2: number, lng2: nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// ──── Users ────
+// ──── Users & Multi-Role Authentication ────
 
 export function getUsers(): User[] {
   return getItem<User[]>(USERS_KEY, []);
-}
-
-export function registerUser(
-  name: string,
-  email: string,
-  password: string,
-  role: UserRole = 'citizen'
-): User {
-  const users = getUsers();
-  if (users.find((u) => u.email === email)) {
-    throw new Error('Email already registered');
-  }
-  const user: User = {
-    id: uuidv4(),
-    name,
-    email,
-    password,
-    role,
-    trainingCompleted: false,
-    trainingScore: 0,
-    reportsCount: 0,
-    civicPoints: 50, // Starter bonus
-    badge: 'none',
-    createdAt: new Date().toISOString(),
-  };
-  users.push(user);
-  setItem(USERS_KEY, users);
-  return user;
-}
-
-export function loginUser(email: string, password: string): User {
-  const users = getUsers();
-  const user = users.find((u) => u.email === email && u.password === password);
-  if (!user) throw new Error('Invalid email or password');
-  setItem(CURRENT_USER_KEY, user);
-  return user;
 }
 
 export function getCurrentUser(): User | null {
@@ -589,39 +507,229 @@ export function updateUser(updated: User): void {
   setItem(CURRENT_USER_KEY, updated);
 }
 
-function computeBadge(user: User): User['badge'] {
+export function computeBadge(user: User): User['badge'] {
   if (user.reportsCount >= 10) return 'hero';
   if (user.reportsCount >= 5) return 'champion';
   if (user.reportsCount >= 1) return 'reporter';
   return 'none';
 }
 
+/**
+ * 1. Citizen Login via 12-Digit Aadhaar
+ */
+export function loginCitizenWithAadhar(aadharInput: string, otpInput = '123456', nameInput?: string): User {
+  const cleanedAadhar = aadharInput.replace(/\D/g, '');
+  if (cleanedAadhar.length !== 12) {
+    throw new Error('Please enter a valid 12-digit Aadhaar number.');
+  }
+
+  const formattedAadhar = `${cleanedAadhar.slice(0, 4)}-${cleanedAadhar.slice(4, 8)}-${cleanedAadhar.slice(8, 12)}`;
+  const users = getUsers();
+  let user = users.find((u) => u.aadharNumber === formattedAadhar || u.aadharNumber?.replace(/\D/g, '') === cleanedAadhar);
+
+  if (!user) {
+    user = {
+      id: `usr_cit_${uuidv4().slice(0, 8)}`,
+      name: nameInput?.trim() || 'Aarav Sharma (Citizen)',
+      email: `citizen_${cleanedAadhar.slice(-4)}@swachh.in`,
+      role: 'citizen',
+      aadharNumber: formattedAadhar,
+      trainingCompleted: true,
+      trainingScore: 100,
+      reportsCount: 3,
+      civicPoints: 180,
+      badge: 'champion',
+      createdAt: new Date().toISOString(),
+    };
+    users.push(user);
+    setItem(USERS_KEY, users);
+  }
+
+  setItem(CURRENT_USER_KEY, user);
+  return user;
+}
+
+/**
+ * 2. Officer Login via Employer ID & Password
+ */
+export function loginOfficerWithEmployerId(employerIdInput: string, passwordInput = 'officer123', nameInput?: string): User {
+  const empId = employerIdInput.trim().toUpperCase();
+  if (!empId || empId.length < 3) {
+    throw new Error('Please enter a valid Employer ID (e.g. EMP-KA33-902).');
+  }
+
+  const users = getUsers();
+  let officer = users.find((u) => u.employerId === empId || u.employerId?.replace(/[^A-Z0-9]/g, '') === empId.replace(/[^A-Z0-9]/g, ''));
+
+  if (!officer) {
+    officer = {
+      id: `usr_off_${uuidv4().slice(0, 8)}`,
+      name: nameInput?.trim() || 'Ramesh Kumar (Sanitation Officer)',
+      email: `${empId.toLowerCase()}@sanitation.gov.in`,
+      password: passwordInput,
+      role: 'officer',
+      employerId: empId,
+      trainingCompleted: true,
+      trainingScore: 100,
+      reportsCount: 0,
+      civicPoints: 0,
+      officerEarnings: 1250, // ₹1,250 starter bounty balance
+      officerBountiesCount: 5,
+      badge: 'hero',
+      createdAt: new Date().toISOString(),
+    };
+    users.push(officer);
+    setItem(USERS_KEY, users);
+  }
+
+  setItem(CURRENT_USER_KEY, officer);
+  return officer;
+}
+
+/**
+ * 3. Admin Login via Secure Passkey
+ */
+export function loginAdminWithPasskey(passkeyInput: string): User {
+  const passkey = passkeyInput.trim();
+  if (!passkey) {
+    throw new Error('Please enter the Admin Passkey.');
+  }
+
+  const users = getUsers();
+  let admin = users.find((u) => u.role === 'admin');
+
+  if (!admin) {
+    admin = {
+      id: 'usr_admin_master',
+      name: 'Dr. Priya Rao (Zonal Commissioner)',
+      email: 'commissioner@swachh.gov.in',
+      role: 'admin',
+      trainingCompleted: true,
+      trainingScore: 100,
+      reportsCount: 0,
+      civicPoints: 500,
+      badge: 'hero',
+      createdAt: new Date().toISOString(),
+    };
+    users.push(admin);
+    setItem(USERS_KEY, users);
+  }
+
+  setItem(CURRENT_USER_KEY, admin);
+  return admin;
+}
+
+/**
+ * Legacy loginUser for backward compatibility
+ */
+export function loginUser(email: string, password?: string): User {
+  const users = getUsers();
+  const user = users.find((u) => u.email === email);
+  if (user) {
+    setItem(CURRENT_USER_KEY, user);
+    return user;
+  }
+  // Default to citizen
+  return loginCitizenWithAadhar('5432-9876-1234', '123456', 'Aarav Sharma');
+}
+
+export function registerUser(name: string, email: string, password?: string, role: UserRole = 'citizen'): User {
+  if (role === 'officer') {
+    return loginOfficerWithEmployerId('EMP-KA33-902', password, name);
+  }
+  return loginCitizenWithAadhar('5432-9876-1234', '123456', name);
+}
+
 export function completeTraining(score: number): User {
   const user = getCurrentUser();
   if (!user) throw new Error('Not logged in');
-  const passed = score >= 3;
-  user.trainingCompleted = passed;
+  user.trainingCompleted = score >= 3;
   user.trainingScore = score;
   user.badge = computeBadge(user);
   updateUser(user);
   return user;
 }
 
-// ──── Demo Login Helpers ────
+// ──── Pre-seeded Demo Accounts & Incidents ────
 
 export function ensureDemoAccounts(): void {
   const users = getUsers();
-  const citizenExists = users.find((u) => u.email === 'citizen@demo.in');
-  const adminExists = users.find((u) => u.email === 'admin@demo.in');
-  if (!citizenExists) {
-    registerUser('Demo Citizen', 'citizen@demo.in', 'demo1234', 'citizen');
+  if (!users.find((u) => u.aadharNumber === '5432-9876-1234')) {
+    loginCitizenWithAadhar('5432-9876-1234', '123456', 'Aarav Sharma');
   }
-  if (!adminExists) {
-    registerUser('Ward Officer', 'admin@demo.in', 'admin1234', 'admin');
+  if (!users.find((u) => u.employerId === 'EMP-KA33-902')) {
+    loginOfficerWithEmployerId('EMP-KA33-902', 'officer123', 'Ramesh Kumar (Sanitation Officer)');
+  }
+  if (!users.find((u) => u.role === 'admin')) {
+    loginAdminWithPasskey('SWACHH-ADMIN-2026');
+  }
+
+  // Pre-seed mock incidents if empty for instant Rapido radar demo
+  const reports = getReports();
+  if (reports.length === 0) {
+    const seedReports: Report[] = [
+      {
+        id: 'rep_demo_1',
+        userId: 'usr_cit_demo',
+        userName: 'Aarav Sharma',
+        photoDataUrl: '/hero-3d.jpg',
+        lat: 12.9716,
+        lng: 77.5946,
+        address: '5th Block, Koramangala 80ft Road, Bengaluru, Karnataka',
+        accuracy: 8.5,
+        description: 'Illegal plastic crates and mixed food waste dumped next to storm-water drain.',
+        wasteCategory: 'dry_recyclable',
+        severity: 'high',
+        status: 'pending_assignment',
+        createdAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+      },
+      {
+        id: 'rep_demo_2',
+        userId: 'usr_cit_demo2',
+        userName: 'Pooja Hegde',
+        photoDataUrl: '/hero-3d.jpg',
+        lat: 12.9782,
+        lng: 77.6012,
+        address: '100 Feet Road, Indiranagar, Bengaluru, Karnataka',
+        accuracy: 6.2,
+        description: 'Overflowing commercial organic waste blackspot causing foul odor.',
+        wasteCategory: 'wet_organic',
+        severity: 'critical',
+        status: 'in_progress',
+        assignedOfficerId: 'usr_off_demo',
+        assignedOfficerName: 'Ramesh Kumar (Sanitation Officer)',
+        assignedOfficerEmployerId: 'EMP-KA33-902',
+        assignedAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        createdAt: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+      },
+      {
+        id: 'rep_demo_3',
+        userId: 'usr_cit_demo3',
+        userName: 'Vikas Rao',
+        photoDataUrl: '/hero-3d.jpg',
+        resolvedPhotoDataUrl: '/hero-3d.jpg',
+        officerProofPhoto: '/hero-3d.jpg',
+        officerNotes: 'Cleaned with Tipper KA-33-E-1042 and disinfected with bleaching lime.',
+        lat: 12.9698,
+        lng: 77.5891,
+        address: 'Yadgir Municipal Circle Blackspot #4',
+        accuracy: 5.0,
+        description: 'Mixed hazardous medical blister packs and broken bottles cleared.',
+        wasteCategory: 'hazardous',
+        severity: 'high',
+        status: 'pending_admin_approval',
+        assignedOfficerId: 'usr_off_demo',
+        assignedOfficerName: 'Ramesh Kumar (Sanitation Officer)',
+        assignedOfficerEmployerId: 'EMP-KA33-902',
+        completedAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+        createdAt: new Date(Date.now() - 90 * 60 * 1000).toISOString(),
+      },
+    ];
+    setItem(REPORTS_KEY, seedReports);
   }
 }
 
-// ──── Reports ────
+// ──── Reports & Rapido Dispatch Operations ────
 
 export function getReports(): Report[] {
   return getItem<Report[]>(REPORTS_KEY, []);
@@ -638,42 +746,179 @@ export async function syncReportsWithSupabase(): Promise<Report[]> {
   return getReports();
 }
 
+/**
+ * Citizen Submits Incident -> Creates Task in 'pending_assignment'
+ */
 export function addReport(
   data: Omit<Report, 'id' | 'userId' | 'userName' | 'status' | 'createdAt'>
 ): Report {
   const user = getCurrentUser();
-  if (!user) throw new Error('Not logged in');
-
-  const randomTipper = SEED_TIPPERS[Math.floor(Math.random() * SEED_TIPPERS.length)];
+  if (!user) throw new Error('Not logged in. Please authenticate with Aadhaar.');
 
   const report: Report = {
     ...data,
-    id: uuidv4(),
+    id: `rep_${uuidv4().slice(0, 8)}`,
     userId: user.id,
     userName: user.name,
-    status: 'pending',
-    assignedTipper: randomTipper.vehicleNumber,
-    etaMinutes: Math.floor(Math.random() * 30) + 20, // 20 - 50 mins
+    status: 'pending_assignment',
     createdAt: new Date().toISOString(),
   };
+
   const reports = getReports();
   reports.unshift(report);
   setItem(REPORTS_KEY, reports);
 
-  // Sync with Supabase in background
   if (isSupabaseConfigured()) {
     insertReportToSupabase(report).catch((err) =>
       console.warn('Background Supabase insert error:', err)
     );
   }
 
-  // Update user report count, civic points, and badge
+  // Update citizen civic points
   user.reportsCount = (user.reportsCount || 0) + 1;
   user.civicPoints = (user.civicPoints || 50) + 15;
   user.badge = computeBadge(user);
   updateUser(user);
 
   return report;
+}
+
+/**
+ * Officer Rapido-Style Task Operations
+ */
+export function getNearbyOfficerTasks(officerLat = 12.9716, officerLng = 77.5946): Report[] {
+  const reports = getReports();
+  return reports
+    .filter((r) => r.status === 'pending_assignment' || r.status === 'pending')
+    .map((r) => {
+      const distanceKm = getDistanceKm(officerLat, officerLng, r.lat, r.lng);
+      return {
+        ...r,
+        distanceKm: Math.round(distanceKm * 10) / 10,
+      };
+    })
+    .sort((a, b) => (a.distanceKm || 0) - (b.distanceKm || 0));
+}
+
+export function acceptOfficerTask(reportId: string, officer: User): Report {
+  const reports = getReports();
+  let updatedReport: Report | null = null;
+
+  const newReports = reports.map((r) => {
+    if (r.id === reportId) {
+      updatedReport = {
+        ...r,
+        status: 'in_progress' as const,
+        assignedOfficerId: officer.id,
+        assignedOfficerName: officer.name,
+        assignedOfficerEmployerId: officer.employerId || 'EMP-OFFICER',
+        assignedTipper: 'Tipper-KA33-E-1042',
+        assignedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      return updatedReport;
+    }
+    return r;
+  });
+
+  if (!updatedReport) throw new Error('Report not found');
+  setItem(REPORTS_KEY, newReports);
+
+  if (isSupabaseConfigured()) {
+    updateReportInSupabase(reportId, 'in_progress').catch(console.warn);
+  }
+
+  return updatedReport;
+}
+
+export function submitOfficerProof(
+  reportId: string,
+  proofPhotoDataUrl: string,
+  officerNotes?: string
+): Report {
+  const reports = getReports();
+  let updatedReport: Report | null = null;
+
+  const newReports = reports.map((r) => {
+    if (r.id === reportId) {
+      updatedReport = {
+        ...r,
+        status: 'pending_admin_approval' as const,
+        officerProofPhoto: proofPhotoDataUrl,
+        resolvedPhotoDataUrl: proofPhotoDataUrl,
+        officerNotes: officerNotes || 'Cleanup complete. Waste segregated and loaded into municipal tipper.',
+        completedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      return updatedReport;
+    }
+    return r;
+  });
+
+  if (!updatedReport) throw new Error('Report not found');
+  setItem(REPORTS_KEY, newReports);
+
+  if (isSupabaseConfigured()) {
+    updateReportInSupabase(reportId, 'pending_admin_approval', officerNotes, proofPhotoDataUrl).catch(console.warn);
+  }
+
+  return updatedReport;
+}
+
+/**
+ * Admin Verifies Side-by-Side & Awards Dual Rewards to Both Roles
+ */
+export function adminApproveAndAwardDualRewards(
+  reportId: string,
+  citizenRewardPoints = 50,
+  officerBountyRupees = 250,
+  adminNotes = 'Verified by Zonal Commissioner. 100% compliance met.'
+): Report {
+  const reports = getReports();
+  let targetReport: Report | null = null;
+
+  const updatedReports = reports.map((r) => {
+    if (r.id === reportId) {
+      targetReport = {
+        ...r,
+        status: 'resolved' as const,
+        citizenRewardAwarded: citizenRewardPoints,
+        officerBountyAwarded: officerBountyRupees,
+        adminNotes,
+        updatedAt: new Date().toISOString(),
+      };
+      return targetReport;
+    }
+    return r;
+  });
+
+  if (!targetReport) throw new Error('Report not found');
+  setItem(REPORTS_KEY, updatedReports);
+
+  // 1. Award Citizen Civic Points
+  const users = getUsers();
+  const reportingCitizen = users.find((u) => u.id === (targetReport as any).userId || u.name === (targetReport as any).userName);
+  if (reportingCitizen) {
+    reportingCitizen.civicPoints = (reportingCitizen.civicPoints || 50) + citizenRewardPoints;
+    reportingCitizen.badge = computeBadge(reportingCitizen);
+    updateUser(reportingCitizen);
+  }
+
+  // 2. Award Officer Cash Bounty & Bounties Count
+  const assignedOfficer = users.find(
+    (u) => u.id === (targetReport as any).assignedOfficerId || u.employerId === (targetReport as any).assignedOfficerEmployerId
+  );
+  if (assignedOfficer) {
+    assignedOfficer.officerEarnings = (assignedOfficer.officerEarnings || 0) + officerBountyRupees;
+    assignedOfficer.officerBountiesCount = (assignedOfficer.officerBountiesCount || 0) + 1;
+    updateUser(assignedOfficer);
+  }
+
+  if (isSupabaseConfigured()) {
+    updateReportInSupabase(reportId, 'resolved', adminNotes, (targetReport as any).resolvedPhotoDataUrl).catch(console.warn);
+  }
+
+  return targetReport;
 }
 
 export function updateReportStatus(
@@ -695,15 +940,12 @@ export function updateReportStatus(
   );
   setItem(REPORTS_KEY, reports);
 
-  // Sync status update with Supabase in background
   if (isSupabaseConfigured()) {
-    updateReportInSupabase(reportId, status, adminNotes, resolvedPhotoDataUrl).catch((err) =>
-      console.warn('Background Supabase update error:', err)
-    );
+    updateReportInSupabase(reportId, status, adminNotes, resolvedPhotoDataUrl).catch(console.warn);
   }
 }
 
-// ──── Facilities ────
+// ──── Facilities & Rewards Redemptions ────
 
 export function getFacilities(): Facility[] {
   const stored = getItem<Facility[]>(FACILITIES_KEY, []);
@@ -714,8 +956,6 @@ export function getFacilities(): Facility[] {
   return stored;
 }
 
-// ──── Rewards Redemption ────
-
 export function getRedeemedRewards(): RewardVoucher[] {
   return getItem<RewardVoucher[]>(REDEEMED_REWARDS_KEY, []);
 }
@@ -723,13 +963,25 @@ export function getRedeemedRewards(): RewardVoucher[] {
 export function redeemReward(reward: RewardVoucher): void {
   const user = getCurrentUser();
   if (!user) throw new Error('Not logged in');
-  const userPoints = (user.reportsCount || 0) * 10 + 50;
-  if (userPoints < reward.pointsCost) {
-    throw new Error('Insufficient Civic Points to redeem this voucher.');
+
+  if (reward.targetRole === 'citizen') {
+    const points = user.civicPoints || 50;
+    if (points < reward.costValue) {
+      throw new Error(`Insufficient Civic Points (Needed: ${reward.costValue}, Have: ${points}).`);
+    }
+    user.civicPoints = points - reward.costValue;
+    updateUser(user);
+  } else if (reward.targetRole === 'officer') {
+    const earnings = user.officerEarnings || 0;
+    if (earnings < reward.costValue) {
+      throw new Error(`Insufficient Bounty Balance (Needed: ₹${reward.costValue}, Have: ₹${earnings}).`);
+    }
+    user.officerEarnings = earnings - reward.costValue;
+    updateUser(user);
   }
 
   const existing = getRedeemedRewards();
-  existing.push({
+  existing.unshift({
     ...reward,
     id: `red_${uuidv4().slice(0, 8)}`,
     code: `SWACHH-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,

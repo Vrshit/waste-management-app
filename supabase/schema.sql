@@ -1,6 +1,6 @@
 -- ================================================================
 -- SwachhApp 3D - Supabase PostgreSQL Schema & Storage Setup
--- Run this script in the Supabase SQL Editor (1-Click Run)
+-- Multi-Role: Citizen (Aadhaar), Officer (Emp ID), Admin (Passkey)
 -- ================================================================
 
 -- 1. Enable UUID extension
@@ -12,11 +12,15 @@ create table if not exists public.profiles (
   user_id text unique not null,
   name text not null,
   email text unique not null,
-  role text not null check (role in ('citizen', 'green_champion', 'ward_officer', 'admin')) default 'citizen',
+  role text not null check (role in ('citizen', 'officer', 'admin', 'green_champion', 'ward_officer')) default 'citizen',
+  aadhar_number text,
+  employer_id text,
   training_completed boolean default true,
   training_score integer default 100,
   reports_count integer default 0,
   civic_points integer default 150,
+  officer_earnings numeric default 0,
+  officer_bounties_count integer default 0,
   badge text check (badge in ('none', 'reporter', 'champion', 'hero')) default 'champion',
   created_at timestamp with time zone default now()
 );
@@ -29,6 +33,8 @@ create table if not exists public.reports (
   photo_url text not null,
   audio_url text,
   resolved_photo_url text,
+  officer_proof_photo text,
+  officer_notes text,
   lat double precision not null,
   lng double precision not null,
   address text,
@@ -36,10 +42,17 @@ create table if not exists public.reports (
   description text not null,
   waste_category text not null check (waste_category in ('wet_organic', 'dry_recyclable', 'hazardous', 'e_waste', 'construction', 'mixed')),
   severity text not null check (severity in ('low', 'medium', 'high', 'critical')),
-  status text not null check (status in ('pending', 'reviewed', 'resolved')) default 'pending',
+  status text not null default 'pending_assignment',
   assigned_tipper text,
+  assigned_officer_id text,
+  assigned_officer_name text,
+  assigned_officer_employer_id text,
   eta_minutes integer,
   admin_notes text,
+  citizen_reward_awarded integer,
+  officer_bounty_awarded numeric,
+  assigned_at timestamp with time zone,
+  completed_at timestamp with time zone,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now()
 );
@@ -73,7 +86,7 @@ alter table public.reports enable row level security;
 alter table public.facilities enable row level security;
 alter table public.scrap_rates enable row level security;
 
--- Allow public read & insert for incident reporting
+-- Allow public read, insert, and update for incident reporting & driver dispatch
 create policy "Allow public read on reports" on public.reports for select using (true);
 create policy "Allow public insert on reports" on public.reports for insert with check (true);
 create policy "Allow public update on reports" on public.reports for update using (true);
@@ -82,6 +95,7 @@ create policy "Allow public read on facilities" on public.facilities for select 
 create policy "Allow public read on scrap_rates" on public.scrap_rates for select using (true);
 create policy "Allow public read on profiles" on public.profiles for select using (true);
 create policy "Allow public insert on profiles" on public.profiles for insert with check (true);
+create policy "Allow public update on profiles" on public.profiles for update using (true);
 
 -- 7. Seed Initial Municipal Facilities
 insert into public.facilities (id, name, type, lat, lng, address, contact, operating_hours, capacity_utilization)

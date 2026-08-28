@@ -3,7 +3,7 @@ import Layout from '@/components/Layout';
 import {
   getCurrentUser,
   getReports,
-  SEED_REWARDS,
+  SEED_CITIZEN_REWARDS,
   SEED_WARD_RANKINGS,
   getRedeemedRewards,
   redeemReward,
@@ -259,8 +259,8 @@ export default function DashboardPage() {
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {SEED_REWARDS.map((rew) => {
-              const canAfford = civicPoints >= rew.pointsCost;
+            {SEED_CITIZEN_REWARDS.map((rew) => {
+              const canAfford = civicPoints >= rew.costValue;
               return (
                 <div
                   key={rew.id}
@@ -270,7 +270,7 @@ export default function DashboardPage() {
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-2xl">{rew.icon}</span>
                       <span className="text-xs font-black text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                        {rew.pointsCost} {lang === 'hi' ? 'अंक' : 'Pts'}
+                        {rew.costValue} {lang === 'hi' ? 'अंक' : 'Pts'}
                       </span>
                     </div>
                     <h3 className="font-extrabold text-sm text-gray-900 leading-snug">{rew.title}</h3>
